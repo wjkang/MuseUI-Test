@@ -1,6 +1,6 @@
 var path=require("path");
 var webpack=require("webpack");
-
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
     entry: './src/main.js',
     output: {
@@ -14,7 +14,17 @@ module.exports = {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {
-                    // vue-loader options go here
+
+                    loaders: {
+                        css: ExtractTextPlugin.extract({
+                            use: 'css-loader',
+                            fallback: 'vue-style-loader'
+                        }),//处理，.vue中的style
+                        less:ExtractTextPlugin.extract({
+                            use: 'css-loader!less-loader',
+                            fallback: 'vue-style-loader'
+                        })//处理，.vue中的style lang="less"
+                    }
                 }
             },
             {
@@ -35,16 +45,12 @@ module.exports = {
             },
              {
                  test:/\.css$/,
-                 loader:"style-loader!css-loader"
-             },
+                 use: ExtractTextPlugin.extract(['style-loader','css-loader'])
+             },////处理import 的css文件
              {
                  test: /\.less$/,
-                 use: [
-                     'style-loader',
-                     { loader: 'css-loader', options: { importLoaders: 1 } },
-                     'less-loader'
-                 ]
-             },
+                 use: ExtractTextPlugin.extract(['css-loader','less-loader'])
+             },//处理import 的less文件
              {
                  test: /muse-ui.src.*?js$/,
                  loader: 'babel-loader'
@@ -57,6 +63,9 @@ module.exports = {
             'vue$': 'vue/dist/vue.common.js',
             'muse-components': 'muse-ui/src'
         }
-    }
+    },
+    plugins:[
+        new ExtractTextPlugin('css/[name].css')
+    ]
     //devtool: '#eval-source-map'
 }
