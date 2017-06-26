@@ -45,7 +45,10 @@ module.exports = {
             },
              {
                  test:/\.css$/,
-                 use: ExtractTextPlugin.extract(['style-loader','css-loader'])
+                 use: ExtractTextPlugin.extract({
+                     fallback: "style-loader",
+                     use: "css-loader"
+                 })
              },////处理import 的css文件
              {
                  test: /\.less$/,
