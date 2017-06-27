@@ -26,6 +26,9 @@ function GetConfig(){
 
         });
 }
+function GetUserInfo(){
+    
+}
 function DingTalkPCConfig(config){
     return new Promise((resolve,reject)=>{
         DingTalkPC.config({
