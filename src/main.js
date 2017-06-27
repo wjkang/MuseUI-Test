@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
+import store from './vuex/store'
 import Home from './components/Home.vue'
 import App from './App.vue'
 
@@ -29,5 +30,6 @@ new Vue({
     el: '#app',
     template:'<App/>',
     router,
+    store,
     components:{App}
 }).$mount('#app');

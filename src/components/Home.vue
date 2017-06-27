@@ -10,6 +10,7 @@
       <mu-icon-button icon='add' slot="right">
       </mu-icon-button>
     </mu-appbar>
+    <mu-circular-progress v-show="loading!=0" :size="90" color="red"/>
     <router-link :to="{'name':'add'}" style="width:50px;height:50px;position:absolute;right:0;top:0;z-index:555">
     </router-link>
 
@@ -52,30 +53,6 @@
           </mu-list-item>
         </router-link>
 
-        <router-link :to="{'name':'list',query:{tab:'good'}}" @click.native="open = false">
-          <mu-list-item title="精华" @click="channel('精华')">
-            <mu-icon slot="left" value="thumb_up"/>
-          </mu-list-item>
-        </router-link>
-
-        <router-link :to="{'name':'list',query:{tab:'share'}}" @click.native="open = false">
-          <mu-list-item title="分享" @click="channel('分享')">
-            <mu-icon slot="left" value="share"/>
-          </mu-list-item>
-        </router-link>
-
-        <router-link :to="{'name':'list',query:{tab:'ask'}}" @click.native="open = false">
-          <mu-list-item title="问答" @click="channel('问答')">
-            <mu-icon slot="left" value="live_help"/>
-          </mu-list-item>
-        </router-link>
-
-        <router-link :to="{'name':'list',query:{tab:'job'}}" @click.native="open = false">
-          <mu-list-item title="招聘" @click="channel('招聘')">
-            <mu-icon slot="left" value="local_mall"/>
-          </mu-list-item>
-        </router-link>
-
         <mu-divider />
 
         <router-link :to="{'name':'about'}" @click.native="open = false">
@@ -86,13 +63,11 @@
 
       </mu-list>
     </mu-drawer>
-
-
-
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex'
   export default {
     replace:true,
     name: 'hello',
@@ -106,8 +81,16 @@
       }
     },
     mounted () {
-      if(this.$store.state.user.userInfo)this.userInfo=this.$store.state.user.userInfo;
+
     },
+    beforeRouteEnter(to, from, next) {
+      next((vm)=>{
+        vm.$store.dispatch('getUserData');
+      });
+    },
+    computed: mapGetters([
+       'loading'
+    ]),
     methods: {
       toggle (flag) {
         this.open = !this.open;
@@ -123,6 +106,9 @@
         setTimeout(() => {
           history.go(0);
         },200)*/
+      },
+      login(){
+
       }
     }
   }
@@ -133,7 +119,7 @@
   .header{
   .mu-appbar{
     text-align: center;
-    position: fixed;
+
   }
   .mu-badge-circle{
     border-radius: 12px;

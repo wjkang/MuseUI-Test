@@ -67,8 +67,10 @@ module.exports = {
             'muse-components': 'muse-ui/src'
         }
     },
+    externals: { DingTalkPC: "window.DingTalkPC" },
     plugins:[
-        new ExtractTextPlugin('css/[name].css')
+        new ExtractTextPlugin('css/[name].css'),
+        
     ]
     //devtool: '#eval-source-map'
 }
