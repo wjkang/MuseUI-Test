@@ -21,30 +21,6 @@
             <mu-icon slot="left" value="person_outline"/>
           </mu-list-item>
         </router-link>
-        <template  v-if="userInfo.loginname">
-          <router-link :to="{'name':'user',params: { loginname: userInfo.loginname }}" @click.native="open = false">
-            <mu-list-item :title="userInfo.loginname">
-              <mu-icon slot="left" value="person"/>
-            </mu-list-item>
-          </router-link>
-
-          <router-link :to="{'name':'info'}" @click.native="open = false">
-            <mu-list-item title="消息" >
-              <mu-icon slot="left" value="warning"/>
-              <mu-badge :content="this.$store.state.info.notiNum" :primary="this.$store.state.info.notiNum>0" slot="after" circle/>
-            </mu-list-item>
-          </router-link>
-
-          <router-link :to="{'name':'collection'}" @click.native="open = false">
-            <mu-list-item title="收藏" >
-              <mu-icon slot="left" value="grade"/>
-            </mu-list-item>
-          </router-link>
-
-          <mu-list-item title="退出" @click="loginOut">
-            <mu-icon slot="left" value="undo"/>
-          </mu-list-item>
-        </template>
         <mu-divider />
 
         <router-link :to="{'name':'list',query:{tab:'all'}}" @click.native="open = false">
@@ -76,20 +52,19 @@
       return {
         open: false,
         docked: true,
-        title:"全部",
+        title:"首页",
         userInfo:{}
       }
     },
-    mounted () {
-
-    },
     beforeRouteEnter(to, from, next) {
       next((vm)=>{
-        vm.$store.dispatch('getUserData');
+        if(vm.loginStatus){
+          vm.$store.dispatch('getUserData');
+        }
       });
     },
     computed: mapGetters([
-       'loading'
+       'loading','userData','loginStatus'
     ]),
     methods: {
       toggle (flag) {
@@ -100,12 +75,7 @@
         this.title=title;
       },
       loginOut(){
-        /*this.docked = false;
-        window.window.sessionStorage.removeItem("user");
-        window.window.sessionStorage.removeItem("info");
-        setTimeout(() => {
-          history.go(0);
-        },200)*/
+        this.$store.dispatch('getUserData');
       },
       login(){
 
@@ -126,5 +96,11 @@
     padding: 0 9px;
     width: 100%;
   }
+    .mu-circular-progress{
+      position:absolute;
+      top: 50%;
+      left: 50%;
+      transform:translate(-50%, -50%);
+    }
   }
 </style>

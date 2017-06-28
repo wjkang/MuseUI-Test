@@ -8,24 +8,11 @@ import * as types from '../types'
 const state = {
     // 用户登录状态
     loginStatus: JSON.parse(localStorage.getItem('loginStatus')) || false,
-    // 用户登录信息
-    userInfo: JSON.parse(localStorage.getItem('userInfo')) || {},
-    // 用户数据信息
-    userData: []
+    // 用户信息
+    userData: JSON.parse(localStorage.getItem('userInfo')) || {}
 }
 
 const actions = {
-    /**
-     * 用户登录
-     * @param {any} {commit}
-     * @param {any} accesstoken
-     */
-    setUserInfo({ commit }, res) {
-        localStorage.setItem('userInfo', JSON.stringify(res))
-        localStorage.setItem('loginStatus', true)
-        commit(types.SET_USER_INFO, res)
-        commit(types.SET_LOGIN_STATUS, true)
-    },
 
     /**
      * 退出登录
@@ -35,7 +22,7 @@ const actions = {
         localStorage.removeItem('loginStatus')
         localStorage.removeItem('userInfo')
         commit(types.SET_LOGIN_STATUS, false)
-        commit(types.SET_USER_INFO, {})
+        commit(types.GET_USER_DATA, {})
     },
 
     /**
@@ -45,23 +32,24 @@ const actions = {
      */
     getUserData({ commit }, name) {
         commit(types.COM_LOADING_STATUS, true)
-        /*api.Login()
+        api.Login()
             .then(res => {
+                localStorage.setItem('userInfo', JSON.stringify(res.data))
+                localStorage.setItem('loginStatus', true)
                 commit(types.COM_LOADING_STATUS, false)
                 commit(types.GET_USER_DATA, res.data)
-            });*/
-        //setTimeout(function(){commit(types.COM_LOADING_STATUS, false)},2000);
+                console.log(res);
+            })
+            .catch(err=>console.log(err));
     }
 }
 
 const getters = {
-    getUserData: state => state.userData
+    userData: state => state.userData,
+    loginStatus:state=>state.loginStatus
 }
 
 const mutations = {
-    [types.SET_USER_INFO](state, res) {
-        state.userInfo = res
-    },
     [types.SET_LOGIN_STATUS](state, status) {
         state.loginStatus = status
     },
